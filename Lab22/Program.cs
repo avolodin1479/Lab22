@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace Lab22
 {
@@ -25,25 +27,13 @@ namespace Lab22
                 Console.WriteLine();
             }
 
-            Action<Task, object> action = new Action<Task, object>(Sum);
-            Task task1 = new Task(action);
+            Task task1 = new Task(delegate () { Sum(array); });
 
             Action<Task, object> actionTask2 = new Action<Task, object>(Max);
             Task task2 = task1.ContinueWith(actionTask2, array);
 
             task1.Start();
             Console.ReadKey();
-        }
-
-        static void Sum(Task task, object a)
-        {
-            int[,] c = (int[,])a;
-            int sum = 0;
-            foreach (int b in c)
-            {
-                sum += b;
-            }
-            Console.WriteLine("Сумма всех элементов ={0}", sum);
         }
         static void Max(Task task, object a)
         {
@@ -55,6 +45,15 @@ namespace Lab22
                     max = b;
             }
             Console.WriteLine("Максимальное значение ={0}", max);
+        }
+        static void Sum(int[,] a)
+        {
+            int sum = 0;
+            foreach (int b in a)
+            {
+                sum += b;
+            }
+            Console.WriteLine("Сумма всех элементов ={0}", sum);
         }
     }
 }
